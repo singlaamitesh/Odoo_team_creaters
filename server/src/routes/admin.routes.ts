@@ -172,9 +172,9 @@ router.get('/stats', authenticateToken, requireAdmin, async (req: AuthRequest, r
       db.get('SELECT COUNT(*) as count FROM users WHERE isAdmin = 0'),
       db.get('SELECT COUNT(*) as count FROM users WHERE isAdmin = 0 AND isBanned = 0'),
       db.get('SELECT COUNT(*) as count FROM skills'),
-      db.get('SELECT COUNT(*) as count FROM swaps'),
-      db.get("SELECT COUNT(*) as count FROM swaps WHERE status = 'completed'"),
-      db.get("SELECT COUNT(*) as count FROM swaps WHERE status = 'pending'"),
+      db.get('SELECT COUNT(*) as count FROM swap_requests'),
+      db.get("SELECT COUNT(*) as count FROM swap_requests WHERE status = 'completed'"),
+      db.get("SELECT COUNT(*) as count FROM swap_requests WHERE status = 'pending'"),
       db.all('SELECT * FROM users ORDER BY createdAt DESC LIMIT 5'),
       db.all(`
         SELECT s.*, 

@@ -20,7 +20,7 @@ router.post('/swap/:swapId', authenticateToken, validateBody(ratingSchema), asyn
 
     // Get the swap request
     const swapRequest = await db.get(
-      `SELECT * FROM swaps WHERE id = ? AND status = 'completed'`,
+      `SELECT * FROM swap_requests WHERE id = ? AND status = 'completed'`,
       [swapId]
     );
 
@@ -58,14 +58,14 @@ router.post('/swap/:swapId', authenticateToken, validateBody(ratingSchema), asyn
     // Update the swap with the rating
     if (req.user!.id === swapRequest.requesterId) {
       await db.run(
-        `UPDATE swaps 
+        `UPDATE swap_requests 
          SET ratingByRequester = ?, feedbackByRequester = ?, updatedAt = CURRENT_TIMESTAMP
          WHERE id = ?`,
         [rating, feedback || null, swapId]
       );
     } else {
       await db.run(
-        `UPDATE swaps 
+        `UPDATE swap_requests 
          SET ratingByProvider = ?, feedbackByProvider = ?, updatedAt = CURRENT_TIMESTAMP
          WHERE id = ?`,
         [rating, feedback || null, swapId]

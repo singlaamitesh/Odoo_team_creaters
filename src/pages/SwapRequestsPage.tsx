@@ -151,9 +151,23 @@ export default function SwapRequestsPage() {
     if (!ratingModal.swapId) return;
 
     try {
-      await ratingsAPI.addRating(ratingModal.swapId, ratingForm);
-      setRatingModal({ isOpen: false, swapId: null });
+      console.log('Submitting rating for swap:', ratingModal.swapId);
+      console.log('Rating data:', ratingForm);
+      
+      // Make sure we're sending the correct data format
+      const ratingData = {
+        rating: ratingForm.rating,
+        feedback: ratingForm.feedback || undefined // Send undefined instead of empty string
+      };
+
+      await ratingsAPI.addRating(ratingModal.swapId, ratingData);
+      
+      // Reset form and close modal
       setRatingForm({ rating: 5, feedback: '' });
+      setRatingModal({ isOpen: false, swapId: null });
+      
+      // Refresh the swap requests to show the updated status
+      fetchSwapRequests();
       
       addNotification({
         type: 'success',
@@ -161,10 +175,13 @@ export default function SwapRequestsPage() {
         message: 'Rating submitted successfully'
       });
     } catch (error: any) {
+      console.error('Error submitting rating:', error);
+      console.error('Error details:', error.response?.data);
+      
       addNotification({
         type: 'error',
         title: 'Error',
-        message: error.response?.data?.error || 'Failed to submit rating'
+        message: error.response?.data?.error || 'Failed to submit rating. Please try again.'
       });
     }
   };
