@@ -80,12 +80,14 @@ CREATE TABLE reviews (
 -- Ratings table
 CREATE TABLE ratings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    swapId INTEGER NOT NULL,
     userId INTEGER NOT NULL,
     raterId INTEGER NOT NULL,
     rating INTEGER CHECK(rating >= 1 AND rating <= 5) NOT NULL,
     comment TEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (swapId) REFERENCES swap_requests(id) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (raterId) REFERENCES users(id) ON DELETE CASCADE
 );
